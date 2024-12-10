@@ -16,14 +16,14 @@ func NewPostRepositoryImpl(db *gorm.DB) PostRepository {
 }
 
 // Create 게시글을 DB에 저장
-func (r *PostRepositoryImpl) Create(post *entity.Post) error {
-	return r.DB.Create(post).Error
+func (repository *PostRepositoryImpl) Create(post *entity.Post, tx *gorm.DB) error {
+	return tx.Create(post).Error
 }
 
 // GetByID 특정 ID의 게시글 조회
-func (r *PostRepositoryImpl) GetByID(id uint) (*entity.Post, error) {
+func (repository *PostRepositoryImpl) GetByID(id uint) (*entity.Post, error) {
 	var post entity.Post
-	result := r.DB.First(&post, id)
+	result := repository.DB.First(&post, id)
 	if result.Error != nil {
 		return nil, result.Error
 	}
@@ -31,18 +31,18 @@ func (r *PostRepositoryImpl) GetByID(id uint) (*entity.Post, error) {
 }
 
 // GetAll 모든 게시글 조회
-func (r *PostRepositoryImpl) GetAll() ([]*entity.Post, error) {  // 수정된 부분
+func (repository *PostRepositoryImpl) GetAll() ([]*entity.Post, error) {  // 수정된 부분
 	var posts []*entity.Post  // 수정된 부분
-	result := r.DB.Find(&posts)
+	result := repository.DB.Find(&posts)
 	return posts, result.Error
 }
 
 // Update 게시글 수정
-func (r *PostRepositoryImpl) Update(post *entity.Post) error {
-	return r.DB.Save(post).Error
+func (repository *PostRepositoryImpl) Update(post *entity.Post, tx *gorm.DB) error {
+	return tx.Save(post).Error
 }
 
 // Delete 게시글 삭제
-func (r *PostRepositoryImpl) Delete(id uint) error {
-	return r.DB.Delete(&entity.Post{}, id).Error
+func (repository *PostRepositoryImpl) Delete(id uint, tx *gorm.DB) error {
+	return tx.Delete(&entity.Post{}, id).Error
 }

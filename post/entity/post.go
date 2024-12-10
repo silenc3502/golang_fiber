@@ -1,7 +1,9 @@
 package entity
 
+import "gorm.io/gorm"
+
 type Post struct {
-	ID      uint   `gorm:"primaryKey"`
+	gorm.Model   // 기본 필드: ID, CreatedAt, UpdatedAt, DeletedAt
 	Title   string `gorm:"size:255"`
 	Content string
 }
