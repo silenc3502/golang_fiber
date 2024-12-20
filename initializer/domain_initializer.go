@@ -6,10 +6,18 @@ import (
 	"golang_fiber/post/entity"
 	"golang_fiber/post/repository"
 	"golang_fiber/post/service"
+	"os"
+
+	"github.com/google/wire"
 	"github.com/joho/godotenv"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
-	"os"
+)
+
+var PostSet = wire.NewSet(
+	repository.NewPostRepositoryImpl,
+	service.NewPostService,
+	controller.NewPostController,
 )
 
 // DomainInitializer는 데이터베이스와 서비스 객체를 초기화하는 함수입니다.
@@ -43,10 +51,6 @@ func DomainInitializer() (*gorm.DB, service.PostService, *controller.PostControl
 		return nil, nil, nil, fmt.Errorf("Failed to auto-migrate: %v", err)
 	}
 
-	// Repository와 Service 생성
-	postRepo := repository.NewPostRepositoryImpl(db)
-	postService := service.NewPostService(postRepo, db)
-	postController := controller.NewPostController(postService)
-
-	return db, postService, postController, nil
+	wire.Build(PostSet)
+	// return nil, nil
 }
