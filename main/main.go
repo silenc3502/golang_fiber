@@ -3,18 +3,27 @@ package main
 import (
 	"fmt"
 	"golang_fiber/initializer"
+	"golang_fiber/router"
+
+	"github.com/gofiber/fiber/v2"
 )
 
 func main() {
-	_, _, postController, err := initializer.DomainInitializer()
+	// DB 초기화
+	db, err := initializer.DomainInitializer()
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("Error initializing domain:", err)
 		return
 	}
 
-	// Fiber 앱 초기화 및 라우팅 설정
-	app := initializer.AppInitializer(postController)
+	// Initialize the Fiber app
+	app := fiber.New()
 
-	// 서버 실행
-	app.Listen(":3773")
+	// Register routes for all domains (posts, users, etc.)
+	router.RegisterRoutes(app, db)
+
+	// Start the server
+	if err := app.Listen(":3773"); err != nil {
+		fmt.Println("Error starting server:", err)
+	}
 }
