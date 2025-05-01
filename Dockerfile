@@ -5,7 +5,7 @@ WORKDIR /app
 
 # 의존성 복사 및 설치
 COPY go.mod go.sum ./
-RUN go mod download기
+RUN go mod download
 
 # 소스 전체 복사
 COPY . .
