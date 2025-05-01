@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  fiber-app:
+    image: ghcr.io/your-org/your-repo:latest
+    container_name: fiber-app
+    restart: always
+    ports:
+      - "${FIBER_PORT}:${FIBER_PORT}"
+    env_file:
+      - .env
